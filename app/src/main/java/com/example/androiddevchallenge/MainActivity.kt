@@ -16,8 +16,12 @@
 package com.example.androiddevchallenge
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,8 +36,11 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ProgressIndicatorDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
@@ -45,6 +52,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.androiddevchallenge.ui.theme.MyTheme
 import com.example.androiddevchallenge.ui.theme.grey1
 import com.example.androiddevchallenge.ui.theme.white
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,22 +77,27 @@ fun MyApp() {
                 .padding(top = 50.dp),
             contentAlignment = Alignment.Center
         ) {
+            val viewModel: MainViewModel = viewModel()
+            var progress by remember { mutableStateOf(1f) }
+            val animatedProgress by animateFloatAsState(
+                targetValue = viewModel.progress,
+                animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec
+            )
             CircularProgressIndicator(
                 progress = 1f,
                 modifier = Modifier
                     .size(200.dp),
-                color = grey1,
+                color = MyTheme.colors.filter,
                 strokeWidth = 8.dp
             )
-            val viewModel: MainViewModel = viewModel()
+
             CircularProgressIndicator(
-                progress = viewModel.progress,
+                progress = animatedProgress,
                 modifier = Modifier
                     .size(200.dp),
                 color = MyTheme.colors.primary,
                 strokeWidth = 8.dp
             )
-
             Text(
                 text = viewModel.time,
                 fontSize = 45.sp,
@@ -111,9 +125,7 @@ private fun BottomButtons() {
         ) {
             viewModel.startOrPause()
         }
-        MyButton(
-            "RESET"
-        ) {
+        MyButton("RESET") {
             viewModel.stop()
         }
     }
@@ -162,6 +174,9 @@ fun MyButton(text: String = "", onClick: () -> Unit = {}) {
     ) {
         Text(
             text = text,
+            color = white
         )
     }
 }
+
+

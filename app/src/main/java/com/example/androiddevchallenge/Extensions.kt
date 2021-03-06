@@ -17,11 +17,10 @@ package com.example.androiddevchallenge
 
 import java.util.concurrent.TimeUnit
 
-private const val TIMER_FORMAT = "%02d:%02d:%1d"
+private const val TIMER_FORMAT = "%02d:%02d"
 fun Long.formatTime(): String = String.format(
     TIMER_FORMAT,
     TimeUnit.MILLISECONDS.toMinutes(this),
-    TimeUnit.MILLISECONDS.toSeconds(this) % 60,
-    (this - (this % 100)) % 1000 / 100
+    TimeUnit.MILLISECONDS.toSeconds(this) % 60
 
 )

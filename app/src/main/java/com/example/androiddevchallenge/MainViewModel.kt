@@ -17,11 +17,11 @@ package com.example.androiddevchallenge
 
 import android.os.CountDownTimer
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 
-private const val COUNT_DOWN_MILLIS = 10 * 60 * 1000L
+private const val COUNT_DOWN_MILLIS = 30 * 1000L
 
 class MainViewModel : ViewModel() {
 
@@ -29,7 +29,7 @@ class MainViewModel : ViewModel() {
 
     private var remindMillis = 0L
 
-    var time by mutableStateOf("10:00:0")
+    var time by mutableStateOf(COUNT_DOWN_MILLIS.formatTime())
 
     var progress by mutableStateOf(1F)
 
@@ -44,7 +44,7 @@ class MainViewModel : ViewModel() {
             }
         }
         playState = PlayState.PLAYING
-        countDownTimer = object : CountDownTimer(millisInFuture, 100L) {
+        countDownTimer = object : CountDownTimer(millisInFuture, 1000L) {
             override fun onTick(millisUntilFinished: Long) {
                 remindMillis = millisUntilFinished
                 progress = millisUntilFinished.toFloat() / COUNT_DOWN_MILLIS
@@ -52,7 +52,7 @@ class MainViewModel : ViewModel() {
             }
 
             override fun onFinish() {
-                stop()
+                countDownTimer?.cancel()
             }
         }.start()
     }
@@ -66,6 +66,7 @@ class MainViewModel : ViewModel() {
         remindMillis = 0
         playState = PlayState.STOP
         countDownTimer?.cancel()
+        progress = 1f
         time = COUNT_DOWN_MILLIS.formatTime()
     }
 
