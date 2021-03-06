@@ -17,8 +17,8 @@ package com.example.androiddevchallenge
 
 import android.os.CountDownTimer
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 private const val COUNT_DOWN_MILLIS = 30 * 1000L
